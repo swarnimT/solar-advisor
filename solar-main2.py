@@ -1,36 +1,17 @@
 import math
 import streamlit as st
 
-
-# =========================================================
-# PAGE CONFIGURATION
-# =========================================================
-
 st.set_page_config(
     page_title="Solar Advisor",
     page_icon="☀️",
     layout="centered"
 )
 
-
-# =========================================================
-# APPLICATION TITLE
-# =========================================================
-
 APP_NAME = "Solar Advisor"
-
-
-# =========================================================
-# SESSION STATE
-# =========================================================
 
 if "page" not in st.session_state:
     st.session_state.page = 1
 
-
-# =========================================================
-# HELPER FUNCTIONS
-# =========================================================
 
 def go_to_page(page_number):
     st.session_state.page = page_number
@@ -72,7 +53,6 @@ def calculate_battery_size(backup_load_kw, backup_hours):
 
     required_energy = backup_load_kw * backup_hours
 
-    # Battery reserve / conversion allowance
     battery_size = required_energy / 0.85
 
     return math.ceil(battery_size * 2) / 2
@@ -84,9 +64,6 @@ def estimate_system_cost(
     battery_kwh,
     budget_type
 ):
-
-    # Preliminary planning assumptions.
-    # Actual market pricing will be added later.
 
     if system_type == "On-grid":
         base_cost_per_kw = 55000
@@ -160,13 +137,7 @@ def system_recommendation(
 
     annual_consumption = monthly_units * 12
 
-    # Preliminary solar yield.
-    # This will later be replaced by
-    # location-specific solar-resource data.
-
     solar_yield = 1300
-
-    # Determine target generation.
 
     if "Reduce electricity bill" in objective:
         target_percentage = 0.75
@@ -190,10 +161,6 @@ def system_recommendation(
         / solar_yield
     )
 
-    # Approximate roof capacity.
-    #
-    # This is a planning assumption only.
-    # Final installation requires a site survey.
 
     roof_capacity = roof_area / 100
 
@@ -253,9 +220,6 @@ def system_recommendation(
     )
 
 
-# =========================================================
-# CONTACT SIDEBAR
-# =========================================================
 
 with st.sidebar:
 
@@ -291,10 +255,6 @@ with st.sidebar:
         "Preliminary solar planning tool"
     )
 
-
-# =========================================================
-# PAGE 1 — LOCATION
-# =========================================================
 
 if st.session_state.page == 1:
 
@@ -362,10 +322,6 @@ if st.session_state.page == 1:
             go_to_page(2)
 
 
-# =========================================================
-# PAGE 2 — ELECTRICITY
-# =========================================================
-
 elif st.session_state.page == 2:
 
     st.title("⚡ Electricity Consumption")
@@ -384,10 +340,6 @@ elif st.session_state.page == 2:
             "Estimate from appliances"
         ]
     )
-
-    # -----------------------------------------------------
-    # MONTHLY CONSUMPTION
-    # -----------------------------------------------------
 
     if method == "Enter monthly electricity consumption":
 
@@ -442,9 +394,6 @@ elif st.session_state.page == 2:
 
                 go_to_page(3)
 
-    # -----------------------------------------------------
-    # APPLIANCE ESTIMATION
-    # -----------------------------------------------------
 
     else:
 
@@ -576,10 +525,6 @@ elif st.session_state.page == 2:
 
             go_to_page(3)
 
-
-# =========================================================
-# PAGE 3 — REQUIREMENTS
-# =========================================================
 
 elif st.session_state.page == 3:
 
@@ -713,10 +658,6 @@ elif st.session_state.page == 3:
 
             go_to_page(4)
 
-
-# =========================================================
-# PAGE 4 — ROOF & PROPERTY
-# =========================================================
 
 elif st.session_state.page == 4:
 
@@ -871,10 +812,6 @@ elif st.session_state.page == 4:
                 go_to_page(5)
 
 
-# =========================================================
-# PAGE 5 — BUDGET
-# =========================================================
-
 elif st.session_state.page == 5:
 
     st.title("💰 Budget & Investment")
@@ -977,10 +914,6 @@ elif st.session_state.page == 5:
             go_to_page(6)
 
 
-# =========================================================
-# PAGE 6 — RECOMMENDATION
-# =========================================================
-
 elif st.session_state.page == 6:
 
     st.title("☀️ Your Solar Recommendation")
@@ -991,10 +924,7 @@ elif st.session_state.page == 6:
 
     st.progress(100)
 
-    # -----------------------------------------------------
-    # BASIC INPUTS
-    # -----------------------------------------------------
-
+    
     monthly_units = (
         st.session_state.monthly_units
     )
@@ -1027,10 +957,7 @@ elif st.session_state.page == 6:
         st.session_state.panel_watt
     )
 
-    # -----------------------------------------------------
-    # SOLAR SIZING
-    # -----------------------------------------------------
-
+    
     (
         recommended_capacity,
         annual_generation,
@@ -1049,10 +976,6 @@ elif st.session_state.page == 6:
         monthly_units * 12
     )
 
-    # -----------------------------------------------------
-    # PANEL COUNT
-    # -----------------------------------------------------
-
     panel_count = calculate_panel_count(
         recommended_capacity,
         panel_watt
@@ -1064,10 +987,6 @@ elif st.session_state.page == 6:
         / 1000
     )
 
-    # -----------------------------------------------------
-    # BATTERY SIZING
-    # -----------------------------------------------------
-
     backup_hours = calculate_battery_hours(
         backup_duration
     )
@@ -1076,7 +995,6 @@ elif st.session_state.page == 6:
         st.session_state.backup_appliances
     )
 
-    # Preliminary estimated load
     appliance_loads = {
         "Fans": 0.15,
         "Lights": 0.04,
@@ -1101,9 +1019,6 @@ elif st.session_state.page == 6:
         backup_hours
     )
 
-    # -----------------------------------------------------
-    # INVERTER SIZING
-    # -----------------------------------------------------
 
     if system_type == "On-grid":
 
@@ -1127,9 +1042,6 @@ elif st.session_state.page == 6:
         inverter_kw
     )
 
-    # -----------------------------------------------------
-    # COST
-    # -----------------------------------------------------
 
     estimated_cost = estimate_system_cost(
         recommended_capacity,
@@ -1138,9 +1050,6 @@ elif st.session_state.page == 6:
         budget_type
     )
 
-    # -----------------------------------------------------
-    # CUSTOM BUDGET CHECK
-    # -----------------------------------------------------
 
     budget_warning = False
 
@@ -1154,9 +1063,6 @@ elif st.session_state.page == 6:
 
             budget_warning = True
 
-    # -----------------------------------------------------
-    # ANNUAL SAVINGS
-    # -----------------------------------------------------
 
     annual_savings = estimate_annual_savings(
         annual_consumption,
@@ -1175,9 +1081,6 @@ elif st.session_state.page == 6:
 
         payback_years = 0
 
-    # -----------------------------------------------------
-    # MAIN RECOMMENDATION
-    # -----------------------------------------------------
 
     st.subheader(
         "Recommended System"
@@ -1215,10 +1118,7 @@ elif st.session_state.page == 6:
             f"{coverage_percentage:.0f}%"
         )
 
-    # -----------------------------------------------------
-    # PANELS
-    # -----------------------------------------------------
-
+    
     st.divider()
 
     st.subheader("☀️ Solar Panels")
@@ -1244,10 +1144,6 @@ elif st.session_state.page == 6:
         f"**{actual_panel_capacity:.1f} kW**"
     )
 
-    # -----------------------------------------------------
-    # INVERTER
-    # -----------------------------------------------------
-
     st.subheader("⚡ Inverter")
 
     st.write(
@@ -1260,10 +1156,6 @@ elif st.session_state.page == 6:
         "panel configuration, electrical design, maximum "
         "load and manufacturer specifications."
     )
-
-    # -----------------------------------------------------
-    # BATTERY
-    # -----------------------------------------------------
 
     st.subheader("🔋 Battery")
 
@@ -1297,10 +1189,6 @@ elif st.session_state.page == 6:
                 "You selected a backup duration but did not "
                 "select any essential backup appliances."
             )
-
-    # -----------------------------------------------------
-    # INSTALLATION ASSESSMENT
-    # -----------------------------------------------------
 
     st.divider()
 
@@ -1337,10 +1225,7 @@ elif st.session_state.page == 6:
             "is required."
         )
 
-    # -----------------------------------------------------
-    # SHADING ASSESSMENT
-    # -----------------------------------------------------
-
+    
     shading = (
         st.session_state.shading
     )
@@ -1374,10 +1259,6 @@ elif st.session_state.page == 6:
             "generation. A professional site survey is strongly "
             "recommended before final system sizing."
         )
-
-    # -----------------------------------------------------
-    # ORIENTATION
-    # -----------------------------------------------------
 
     orientation = (
         st.session_state.roof_orientation
@@ -1418,9 +1299,6 @@ elif st.session_state.page == 6:
             "generation. Detailed solar modelling is recommended."
         )
 
-    # -----------------------------------------------------
-    # FINANCIAL ESTIMATE
-    # -----------------------------------------------------
 
     st.divider()
 
@@ -1464,9 +1342,6 @@ elif st.session_state.page == 6:
             "your selected custom budget."
         )
 
-    # -----------------------------------------------------
-    # BUDGET INTERPRETATION
-    # -----------------------------------------------------
 
     st.subheader(
         "💡 Budget Assessment"
@@ -1500,10 +1375,7 @@ elif st.session_state.page == 6:
             f"**₹{st.session_state.custom_budget:,.0f}**."
         )
 
-    # -----------------------------------------------------
-    # CUSTOMER SUMMARY
-    # -----------------------------------------------------
-
+    
     st.divider()
 
     st.subheader(
@@ -1572,9 +1444,6 @@ elif st.session_state.page == 6:
         f"{budget_type}"
     )
 
-    # -----------------------------------------------------
-    # IMPORTANT DISCLAIMER
-    # -----------------------------------------------------
 
     st.divider()
 
@@ -1593,10 +1462,7 @@ elif st.session_state.page == 6:
         "utility rules and qualified professionals."
     )
 
-    # -----------------------------------------------------
-    # RESTART
-    # -----------------------------------------------------
-
+    
     if st.button(
         "🔄 Start New Assessment",
         use_container_width=True
