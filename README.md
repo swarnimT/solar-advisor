@@ -44,4 +44,4 @@ The application follows a step-by-step assessment process:
 Clone the repository:
 
 ```bash
-git clone https://github.com/swarnimT/solar-advisor.git
+git clone https://github.com/Your-Username/solar-advisor.git
