@@ -39,7 +39,9 @@ The application follows a step-by-step assessment process:
 6. Solar Advisor processes the information.
 7. The application generates a preliminary solar system recommendation.
 
-## 💻 Running Locally
+## 💻 currently deployed at cloud(temporarily)
+
+https://solar-advisor.streamlit.app/
 
 Clone the repository:
 
