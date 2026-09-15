@@ -400,7 +400,7 @@ elif st.session_state.page == 2:
         st.subheader("🔌 Appliance Estimation")
 
         st.write(
-            "We can estimate electricity consumption "
+            "We can estimate your electricity consumption "
             "from the appliances you use."
         )
 
